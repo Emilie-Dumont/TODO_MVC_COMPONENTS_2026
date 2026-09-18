@@ -2,6 +2,7 @@
 
 import DB from "../../DB";
 import Todo from "../todo/Todo";
+import getTemplate from "./template";
 
 export default class TodoList {
   constructor(data) {
@@ -13,6 +14,12 @@ export default class TodoList {
   async loadTodos() {
     const todos = await DB.findAll();
     this.todos = [...todos.map((todo) => new Todo(todo))];
-    console.table(this.todos);
+    this.render();
+  }
+  render() {
+    this.domEl.innerHTML = getTemplate();
+    this.todos.forEach((todo) => {
+      todo.render(this.domEl.querySelector(".todo-list"));
+    });
   }
 }
