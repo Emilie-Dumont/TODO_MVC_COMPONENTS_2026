@@ -1,7 +1,6 @@
 //export default veut juste dire "ce fichier peut être importé ailleurs"
 /*Todo.js = une fiche dans un carnet d'adresses. Elle concerne une seule tâche. Tout ce qui décrit ou modifie cette tâche précise (ses propriétés, cocher/décocher elle-même, s'afficher elle-même) va ici.*/
 import getTemplate from "./template";
-import DB from "../../DB";
 
 export default class Todo {
   constructor(data) {
@@ -22,14 +21,16 @@ export default class Todo {
   async toggleCompleted() {
     this.completed = !this.completed;
     this.domElt.classList.toggle("completed");
-    window.TodoList.renderItemsLeftCount();
-    return await DB.updateOne(this);
+    this.dispatch("todo:updated", { todo: this });
   }
   async update(data) {
     this.content = data;
     this.domElt.querySelector("label").innerText = this.content;
     this.domElt.classList.remove("editing");
-    return await DB.updateOne(this);
+    this.dispatch("todo:updated", { todo: this });
+  }
+  dispatch(type, detail) {
+    this.domElt.dispatchEvent(new CustomEvent(type, { bubbles: true, detail }));
   }
 
   initEvents() {
@@ -37,7 +38,7 @@ export default class Todo {
       this.toggleCompleted();
     });
     this.domElt.querySelector(".destroy").addEventListener("click", () => {
-      window.TodoList.deleteOneById(this.id);
+      this.dispatch("todo:deleted", { id: this.id });
     });
     this.domElt.querySelector("label").addEventListener("dblclick", () => {
       this.domElt.classList.add("editing");

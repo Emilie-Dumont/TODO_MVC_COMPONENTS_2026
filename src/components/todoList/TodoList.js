@@ -32,6 +32,10 @@ export default class TodoList {
     this.domEl.querySelector(".todo-count strong").innerText =
       this.getItemsLeftCount();
   }
+  async updateOne(todo) {
+    this.renderItemsLeftCount(); //si une tâche passe de "à faire" à "faite" (ou l'inverse), le compteur "X item(s) left" doit se mettre à jour.
+    return await DB.updateOne(todo);
+  }
   async addTodo(data) {
     const todoData = await DB.create(data);
     const newTodo = new Todo(todoData);
@@ -49,9 +53,16 @@ export default class TodoList {
     this.renderItemsLeftCount();
   }
   initEvents() {
+    //un écouteur qui dit : "quand l'input .new-todo change, fais addTodo"
     this.domEl.querySelector(".new-todo").addEventListener("change", (e) => {
       this.addTodo(e.target.value);
       e.target.value = "";
+    });
+    this.listDomElt.addEventListener("todo:deleted", (e) => {
+      this.deleteOneById(e.detail.id);
+    });
+    this.listDomElt.addEventListener("todo:updated", (e) => {
+      this.updateOne(e.detail.todo);
     });
   }
 }
