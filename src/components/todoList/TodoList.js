@@ -20,7 +20,7 @@ export default class TodoList {
     this.domEl.innerHTML = getTemplate();
     this.listDomElt = this.domEl.querySelector(".todo-list");
     this.todos.forEach((todo) => {
-      todo.render(this.listDomElt);
+      this.listDomElt.append(todo.render());
     });
     this.renderItemsLeftCount();
     this.initEvents();
@@ -36,7 +36,7 @@ export default class TodoList {
     const todoData = await DB.create(data);
     const newTodo = new Todo(todoData);
     this.todos.push(newTodo);
-    newTodo.render(this.listDomElt);
+    this.listDomElt.append(newTodo.render());
     this.renderItemsLeftCount();
   }
   async deleteOneById(id) {

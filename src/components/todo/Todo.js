@@ -12,12 +12,12 @@ export default class Todo {
     this.domElt = null;
   }
 
-  render(el) {
+  render() {
     const template = document.createElement("template");
     template.innerHTML = getTemplate(this);
     this.domElt = template.content.firstElementChild;
     this.initEvents();
-    el.append(this.domElt);
+    return this.domElt;
   }
   async toggleCompleted() {
     this.completed = !this.completed;
@@ -47,3 +47,5 @@ export default class Todo {
     });
   }
 }
+/*Pour l'instant on peut éditer plusieurs tâches à la fois parce que toutes les tâches sont indépendantes
+chaque Todo ne connaît que son propre état, pas celui des autres.*/
