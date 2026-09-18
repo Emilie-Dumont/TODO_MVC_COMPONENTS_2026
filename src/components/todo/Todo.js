@@ -25,6 +25,12 @@ export default class Todo {
     window.TodoList.renderItemsLeftCount();
     return await DB.updateOne(this);
   }
+  async update(data) {
+    this.content = data;
+    this.domElt.querySelector("label").innerText = this.content;
+    this.domElt.classList.remove("editing");
+    return await DB.updateOne(this);
+  }
 
   initEvents() {
     this.domElt.querySelector(".toggle").addEventListener("change", () => {
@@ -32,6 +38,12 @@ export default class Todo {
     });
     this.domElt.querySelector(".destroy").addEventListener("click", () => {
       window.TodoList.deleteOneById(this.id);
+    });
+    this.domElt.querySelector("label").addEventListener("dblclick", () => {
+      this.domElt.classList.add("editing");
+    });
+    this.domElt.querySelector(".edit").addEventListener("change", (e) => {
+      this.update(e.target.value);
     });
   }
 }
