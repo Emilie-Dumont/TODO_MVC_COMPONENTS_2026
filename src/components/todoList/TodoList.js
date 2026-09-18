@@ -18,10 +18,12 @@ export default class TodoList {
   }
   render() {
     this.domEl.innerHTML = getTemplate();
+    this.listDomElt = this.domEl.querySelector(".todo-list");
     this.todos.forEach((todo) => {
-      todo.render(this.domEl.querySelector(".todo-list"));
+      todo.render(this.listDomElt);
     });
     this.renderItemsLeftCount();
+    this.initEvents();
   }
   getItemsLeftCount() {
     return this.todos.filter((todo) => !todo.completed).length;
@@ -29,5 +31,18 @@ export default class TodoList {
   renderItemsLeftCount() {
     this.domEl.querySelector(".todo-count strong").innerText =
       this.getItemsLeftCount();
+  }
+  async addTodo(data) {
+    const todoData = await DB.create(data);
+    const newTodo = new Todo(todoData);
+    this.todos.push(newTodo);
+    newTodo.render(this.listDomElt);
+    this.renderItemsLeftCount();
+  }
+  initEvents() {
+    this.domEl.querySelector(".new-todo").addEventListener("change", (e) => {
+      this.addTodo(e.target.value);
+      e.target.value = "";
+    });
   }
 }
