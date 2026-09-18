@@ -39,6 +39,15 @@ export default class TodoList {
     newTodo.render(this.listDomElt);
     this.renderItemsLeftCount();
   }
+  async deleteOneById(id) {
+    const resp = await DB.deleteOneById(id);
+    this.todos.splice(
+      this.todos.findIndex((todo) => todo.id == id),
+      1,
+    );
+    this.domEl.querySelector(`[data-id='${id}']`).remove();
+    this.renderItemsLeftCount();
+  }
   initEvents() {
     this.domEl.querySelector(".new-todo").addEventListener("change", (e) => {
       this.addTodo(e.target.value);

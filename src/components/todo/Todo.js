@@ -30,5 +30,8 @@ export default class Todo {
     this.domElt.querySelector(".toggle").addEventListener("change", () => {
       this.toggleCompleted();
     });
+    this.domElt.querySelector(".destroy").addEventListener("click", () => {
+      window.TodoList.deleteOneById(this.id);
+    });
   }
 }
