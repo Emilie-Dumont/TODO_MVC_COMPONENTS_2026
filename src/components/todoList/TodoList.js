@@ -21,5 +21,13 @@ export default class TodoList {
     this.todos.forEach((todo) => {
       todo.render(this.domEl.querySelector(".todo-list"));
     });
+    this.renderItemsLeftCount();
+  }
+  getItemsLeftCount() {
+    return this.todos.filter((todo) => !todo.completed).length;
+  }
+  renderItemsLeftCount() {
+    this.domEl.querySelector(".todo-count strong").innerText =
+      this.getItemsLeftCount();
   }
 }
