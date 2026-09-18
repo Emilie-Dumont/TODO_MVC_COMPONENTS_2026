@@ -1,0 +1,13 @@
+/*DB.js = le facteur. Il fait uniquement des allers-retours avec le serveur (envoyer une requête, ramener une réponse). Il ne sait pas afficher quoi que ce soit à l'écran, il ne connaît même pas l'existence du HTML.
+Concrètement pour la suppression : DB.js aura une méthode deleteOneById(id) qui fait le fetch vers le serveur ; et c'est TodoList.js qui appellera cette méthode de DB.js, puis retirera la tâche du tableau et du DOM. Todo.js, lui, se contente de dire "on m'a cliqué dessus pour me supprimer"
+*/
+
+export default class DB {
+  static setApiURL(url) {
+    this.apiURL = url;
+  }
+  static async findAll() {
+    const response = await fetch(this.apiURL + "/todos");
+    return response.json();
+  }
+}
